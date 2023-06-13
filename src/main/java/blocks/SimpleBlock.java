@@ -14,12 +14,12 @@ public class SimpleBlock implements Block {
 
     @Override
     public String getColor() {
-        return null;
+        return color;
     }
 
     @Override
     public String getMaterial() {
-        return null;
+        return material;
     }
 
     @Override
