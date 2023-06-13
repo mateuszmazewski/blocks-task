@@ -1,6 +1,7 @@
 package blocks;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 public class Wall implements Structure {
     private final List<Block> blocks = new ArrayList<>();
@@ -15,34 +16,20 @@ public class Wall implements Structure {
             throw new IllegalArgumentException("color cannot be null");
         }
 
-        Block foundBlock;
-        for (Block block : blocks) {
-            foundBlock = recursiveBlockSearch(block, color);
-            if (foundBlock != null) {
-                return Optional.of(foundBlock);
-            }
-        }
-
-        return Optional.empty();
+        return blocks.stream()
+                .flatMap(this::flattenBlock)
+                .filter(block -> color.equals(block.getColor()))
+                .findAny();
     }
 
-    private Block recursiveBlockSearch(Block block, String color) {
-        if (color.equals(block.getColor())) {
-            return block;
-        }
-
+    private Stream<Block> flattenBlock(Block block) {
         if (block instanceof CompositeBlock) {
-            Block foundBlock;
-
-            for (Block b : ((CompositeBlock) block).getBlocks()) {
-                foundBlock = recursiveBlockSearch(b, color);
-                if (foundBlock != null) {
-                    return foundBlock;
-                }
-            }
+            return Stream.concat(
+                    Stream.of(block),
+                    ((CompositeBlock) block).getBlocks().stream().flatMap(this::flattenBlock));
         }
 
-        return null;
+        return Stream.of(block);
     }
 
     @Override
