@@ -1,6 +1,7 @@
 package blocks;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Wall implements Structure {
@@ -34,12 +35,21 @@ public class Wall implements Structure {
 
     @Override
     public List<Block> findBlocksByMaterial(String material) {
-        return null;
+        if (material == null) {
+            throw new IllegalArgumentException("material cannot be null");
+        }
+
+        return blocks.stream()
+                .flatMap(this::flattenBlock)
+                .filter(block -> material.equals(block.getMaterial()))
+                .collect(Collectors.toList());
     }
 
     @Override
     public int count() {
-        return 0;
+        return (int) blocks.stream()
+                .flatMap(this::flattenBlock)
+                .count();
     }
 
     @Override
