@@ -40,3 +40,11 @@ You can import the project to your IDE of choice as you would with any
 Maven project and run it directly there.
 
 The project contains unit tests that can be run in order to check the solution.
+
+## Notes
+
+- Not all the logic was placed in Wall class in order to apply "composite" design pattern which allows better
+  separation.
+- Block interface contains an additional method for the same reason as above.
+- No block from the blocks hierarchy can be contained inside itself or anywhere lower in its hierarchy, because it leads
+  to the infinite recursion.
