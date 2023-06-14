@@ -2,7 +2,6 @@ package blocks;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Wall implements Structure {
     private final List<Block> blocks = new ArrayList<>();
@@ -18,26 +17,9 @@ public class Wall implements Structure {
         }
 
         return blocks.stream()
-                .flatMap(this::flattenBlock)
+                .flatMap(Block::flattenIntoStream)
                 .filter(block -> color.equals(block.getColor()))
                 .findAny();
-    }
-
-    /**
-     * @param block block to be flattened
-     * @return Stream of blocks representing a flattened structure of the given block.
-     * The stream includes recursively found nested blocks.
-     * @throws StackOverflowError when any block from the blocks hierarchy is contained inside itself
-     *                            or anywhere lower in its hierarchy it leads to the infinite recursion.
-     */
-    private Stream<Block> flattenBlock(Block block) {
-        if (block instanceof CompositeBlock) {
-            return Stream.concat(
-                    Stream.of(block),
-                    ((CompositeBlock) block).getBlocks().stream().flatMap(this::flattenBlock));
-        }
-
-        return Stream.of(block);
     }
 
     @Override
@@ -47,7 +29,7 @@ public class Wall implements Structure {
         }
 
         return blocks.stream()
-                .flatMap(this::flattenBlock)
+                .flatMap(Block::flattenIntoStream)
                 .filter(block -> material.equals(block.getMaterial()))
                 .collect(Collectors.toList());
     }
@@ -55,7 +37,7 @@ public class Wall implements Structure {
     @Override
     public int count() {
         return (int) blocks.stream()
-                .flatMap(this::flattenBlock)
+                .flatMap(Block::flattenIntoStream)
                 .count();
     }
 

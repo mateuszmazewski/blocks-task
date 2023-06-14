@@ -3,6 +3,7 @@ package blocks;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 public class ComplexBlock extends SimpleBlock implements CompositeBlock {
 
@@ -15,6 +16,13 @@ public class ComplexBlock extends SimpleBlock implements CompositeBlock {
     @Override
     public List<Block> getBlocks() {
         return blocks;
+    }
+
+    @Override
+    public Stream<Block> flattenIntoStream() {
+        return Stream.concat(
+                super.flattenIntoStream(),
+                blocks.stream().flatMap(Block::flattenIntoStream));
     }
 
     public void addBlock(Block block) {

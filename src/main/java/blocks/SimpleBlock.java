@@ -1,6 +1,7 @@
 package blocks;
 
 import java.util.Objects;
+import java.util.stream.Stream;
 
 public class SimpleBlock implements Block {
 
@@ -20,6 +21,11 @@ public class SimpleBlock implements Block {
     @Override
     public String getMaterial() {
         return material;
+    }
+
+    @Override
+    public Stream<Block> flattenIntoStream() {
+        return Stream.of(this);
     }
 
     @Override
